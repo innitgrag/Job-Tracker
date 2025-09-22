@@ -1,4 +1,4 @@
-# app.py
+# app.py - CORRECTED VERSION
 import streamlit as st
 import random
 from datetime import datetime
@@ -90,23 +90,17 @@ intro_templates = [
     "I'm {name}, a recent graduate from BITS Pilani, Hyderabad Campus (EEE, CGPA: 7.92). Having researched {company}'s innovative work in {focus}, I'm excited about the possibility of joining your team.",
 ]
 
-experience_block = (
-    "I bring hands-on experience as a Software Developer Intern at Piramal Finance Limited, where I:\n"
-    "• Implemented 6+ frontend and backend modules using React.js, TypeScript, and Spring Boot\n"
-    "• Integrated 10+ REST APIs and collaborated with cross-functional teams for 3+ production releases\n"
-    "• Built custom monitoring solutions that reduced issue resolution time\n\n"
-    "Previously, at Cognix Technologies, I developed a Flutter-based food tracking app that reduced manual logging effort by 30% and accelerated feature delivery by 25%."
-)
+experience_block = """I bring hands-on experience as a Software Developer Intern at Piramal Finance Limited, where I:
+• Implemented 6+ frontend and backend modules using React.js, TypeScript, and Spring Boot
+• Integrated 10+ REST APIs and collaborated with cross-functional teams for 3+ production releases
+• Built custom monitoring solutions that reduced issue resolution time
 
-tech_block = (
-    "My technical stack includes C++, Java, SQL, Node.js, React.js, Spring Boot, and experience with scalable full-stack applications. "
-    "I have strong foundations in DSA, OOP, OS, DBMS, and System Design."
-)
+Previously, at Cognix Technologies, I developed a Flutter-based food tracking app that reduced manual logging effort by 30% and accelerated feature delivery by 25%."""
 
-projects_block = (
-    "• PG Pal: Full-stack platform with secure authentication and advanced filtering (pg-pal.vercel.app)\n"
-    "• Jobify: Job matching platform connecting recruiters and candidates"
-)
+tech_block = """My technical stack includes C++, Java, SQL, Node.js, React.js, Spring Boot, and experience with scalable full-stack applications. I have strong foundations in DSA, OOP, OS, DBMS, and System Design."""
+
+projects_block = """• PG Pal: Full-stack platform with secure authentication and advanced filtering (pg-pal.vercel.app)
+• Jobify: Job matching platform connecting recruiters and candidates"""
 
 closing_templates = [
     "I would welcome the opportunity to discuss how my technical skills and passion for software development can contribute to {company}'s continued innovation. Thank you for your time.",
@@ -172,9 +166,9 @@ if st.button("Generate Emails"):
         subject = random.choice(subject_templates).format(company=company_name)
         intro = random.choice(intro_templates).format(name=name, company=company_name, focus=data.get('focus',''))
         specialties = ", ".join(data.get('specialties', [])[:3])
+        closing = random.choice(closing_templates).format(company=company_name)
 
-        body = f"""
-Dear {hiring_manager},
+        body = f"""Dear {hiring_manager},
 
 {intro}
 
@@ -195,15 +189,15 @@ I'm impressed by {company_name}'s position as a leading {data.get('category','')
 **Problem-Solving Foundation:**
 I have solved 400+ problems on LeetCode, demonstrating strong algorithmic thinking.
 
-I would value the opportunity to contribute to {company_name}'s mission. Thank you for your time.
+{closing}
 
 Best regards,
 {name}
 📧 {email}
 📱 {phone}
 💼 LinkedIn: {linkedin}
-🔗 GitHub: {github}
-"""
+🔗 GitHub: {github}"""
+
         emails.append((subject, body))
 
     st.success(f"Generated {len(emails)} email(s)")
@@ -213,6 +207,8 @@ Best regards,
         st.text_input("Subject", value=subject, key=f"sub_{idx}")
         st.text_area("Body", value=body, height=420, key=f"body_{idx}")
         fname = f"cold_email_{company_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_v{idx}.txt"
-        st.download_button("Download .txt", data=f"SUBJECT: {subject}\n\n{body}", file_namefname, mime="text/plain")
+        # FIXED: Added proper file_name parameter
+        st.download_button("Download .txt", data=f"SUBJECT: {subject}\n\n{body}", file_name=fname, mime="text/plain")
+        st.markdown("---")
 
 st.info("Tip: Edit the text above before downloading to fine-tune for each role.")
